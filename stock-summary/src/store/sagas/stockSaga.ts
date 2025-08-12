@@ -22,10 +22,11 @@ interface StockTwitsResponse {
 function* fetchTrendingMessages(action: ReturnType<typeof fetchTrendingMessagesStart>) {
   try {
     const symbol = action.payload;
-    const response: AxiosResponse<StockTwitsResponse> = yield call(
-      axios.get,
-      `/stocktwits/api/2/trending_messages/symbol/${symbol}.json?filter=all&limit=100`
-    );
+    const isDev = process.env.NODE_ENV === 'development';
+    const url = isDev
+      ? `/stocktwits/api/2/trending_messages/symbol/${symbol}.json?filter=all&limit=100`
+      : `/api/trending_messages/symbol/${symbol}.json?filter=all&limit=100`;
+    const response: AxiosResponse<StockTwitsResponse> = yield call(axios.get, url);
 
     yield put(fetchTrendingMessagesSuccess(response.data.messages));
   } catch (error: any) {
