@@ -1,0 +1,54 @@
+name: CI - Build and Deploy to Firebase
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_ID: stocksummary-9758d
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20 for frontend
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: |
+            stock-summary/package-lock.json
+            functions/package-lock.json
+
+      - name: Install frontend deps
+        working-directory: stock-summary
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: stock-summary
+        run: npm run build
+
+      - name: Install Functions deps
+        working-directory: functions
+        run: npm ci
+
+      - name: Build Functions (tsc)
+        working-directory: functions
+        run: npm run build
+
+      - name: Install Firebase CLI
+        run: npm i -g firebase-tools
+
+      - name: Deploy to Firebase (Functions + Hosting)
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          firebase use $PROJECT_ID --token "$FIREBASE_TOKEN"
+          firebase deploy --only functions,hosting --token "$FIREBASE_TOKEN" --non-interactive
