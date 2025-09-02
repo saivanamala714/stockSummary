@@ -9,6 +9,13 @@ export interface StockMessage {
     username: string;
     name: string;
     avatar_url: string;
+    followers?: number;
+    followers_count?: number;
+  };
+  entities?: {
+    sentiment?: {
+      basic?: string;
+    };
   };
   symbols: Array<{
     id: number;

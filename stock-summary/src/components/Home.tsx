@@ -8,6 +8,14 @@ const Home: React.FC = () => {
   const dispatch = useDispatch();
   const { messages, loading, error, symbol } = useSelector((state: RootState) => state.stock);
 
+  const sortedMessages = React.useMemo(() => {
+    return [...messages].sort((a, b) => {
+      const aFollowers = (a.user.followers ?? a.user.followers_count ?? 0) as number;
+      const bFollowers = (b.user.followers ?? b.user.followers_count ?? 0) as number;
+      return bFollowers - aFollowers;
+    });
+  }, [messages]);
+
   useEffect(() => {
     dispatch(fetchTrendingMessagesStart('NVDA'));
   }, [dispatch]);
@@ -44,20 +52,25 @@ const Home: React.FC = () => {
 
   if (error) {
     return (
-      <div className="home-container">
-        <div className="error">
-          <h2>Error</h2>
-          <p>{error}</p>
-          <button onClick={handleRefresh} className="retry-button">
-            Retry
-          </button>
+      <div className="home">
+        <div className="home-header">
+          <h1>Stock Summary</h1>
+        </div>
+        <div className="home-content">
+          <div className="trending-container">
+            <h2>Trending Today</h2>
+            <p>{error}</p>
+            <button onClick={handleRefresh} className="retry-button">
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="home-container">
+    <div className="home">
       <header className="header">
         <h1>StockTwits Trending Messages</h1>
         <div className="symbol-info">
@@ -75,7 +88,7 @@ const Home: React.FC = () => {
           </div>
         ) : (
           <div className="messages-grid">
-            {messages.map((message) => (
+            {sortedMessages.map((message) => (
               <div key={message.id} className="message-card">
                 <div className="message-header">
                   <div className="user-info">
@@ -87,16 +100,25 @@ const Home: React.FC = () => {
                     <div className="user-details">
                       <span className="username">@{message.user.username}</span>
                       <span className="name">{message.user.name}</span>
+                      <div className="user-stats">
+                        <span className="followers-chip">
+                          Followers: {message.user.followers ?? message.user.followers_count ?? '—'}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  {message.sentiment && (
-                    <div
-                      className="sentiment"
-                      style={{ color: getSentimentColor(message.sentiment.basic) }}
-                    >
-                      {message.sentiment.basic}
-                    </div>
-                  )}
+                  {(() => {
+                    const sentimentBasic =
+                      message.entities?.sentiment?.basic ?? message.sentiment?.basic ?? 'Neutral';
+                    return (
+                      <div
+                        className="sentiment"
+                        style={{ color: getSentimentColor(sentimentBasic) }}
+                      >
+                        {sentimentBasic}
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div className="message-body">
