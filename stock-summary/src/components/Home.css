@@ -5,6 +5,155 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
+/* Ticker Selector Styles */
+.ticker-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px 0;
+  position: relative;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.ticker-search {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+}
+
+.ticker-search:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.ticker-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  margin-top: 4px;
+}
+
+.ticker-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.ticker-option:last-child {
+  border-bottom: none;
+}
+
+.ticker-option:hover {
+  background-color: #f5f5f5;
+}
+
+.symbol-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.symbol {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1a1a1a;
+}
+
+.refresh-button {
+  padding: 8px 16px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.refresh-button:hover {
+  background-color: #357abd;
+}
+
+.market-sentiment-summary {
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+}
+
+.sentiment-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 15px;
+  flex: 1;
+  border-right: 1px solid #f0f0f0;
+}
+
+.sentiment-metric:last-child {
+  border-right: none;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.metric-label {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+  .market-sentiment-summary {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .sentiment-metric {
+    border-right: none;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 10px 0;
+  }
+  
+  .sentiment-metric:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .metric-value {
+    font-size: 20px;
+  }
+}
+
 .price-container {
   display: flex;
   flex-direction: column;
@@ -263,16 +412,57 @@
 }
 
 .user-stats {
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
-.followers-chip {
-  display: inline-block;
-  font-size: 12px;
-  background: #f1f3f4;
-  color: #333;
-  border-radius: 12px;
+.stats-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.followers-chip, .sentiment-chip, .tweet-stats {
+  display: inline-flex;
+  font-size: 0.8rem;
   padding: 2px 8px;
+  border-radius: 12px;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.followers-chip, .tweet-stats {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.sentiment-chip.bullish {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #2e7d32;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  font-weight: 500;
+}
+
+.sentiment-chip.bearish {
+  background-color: rgba(244, 67, 54, 0.15);
+  color: #c62828;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  font-weight: 500;
+}
+
+.stats-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.user-stats {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .username {
